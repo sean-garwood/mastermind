@@ -5,10 +5,10 @@ module Answer
   COLORS = %w[red orange yellow green blue violet].freeze
   POSITIONS = (0..3).freeze
 
-  def guess
-    guess = {}
+  def generate_code
+    code = {}
     POSITIONS.each { |position| guess[position] = COLORS.sample }
-    guess
+    code
   end
 end
 
