@@ -67,11 +67,18 @@ class Game
   COLORS = %w[r o y g b v].freeze
   POSITIONS = (0..3).freeze
 
+  attr_reader :over, :player, :turns
+
   def initialize
     greet
+    @code = generate_code
+    @over = false
     @player = gets.chomp
     @turns = 12
-    @code = generate_code
+  end
+
+  def announce_turns
+    puts "There are #{@turns} turns remaining."
   end
 
   def generate_code
@@ -85,13 +92,24 @@ class Game
     # color in the position.
   end
 
-  def take_turn
-    # procedural code
-    @turns -= 1
+  def take_turn(board)
+    until @over
+      puts board
+      puts 'Enter your guess as a string of four letters. Order matters!'
+      announce_turns
+      guess = gets.chomp.downcase
+      correct?(guess)
+      @turns -= 1
+      out_of_turns? ? @over = true : next
+    end
   end
 
-  def over?
-    @turns.zero? || correct?
+  def correct?(guess)
+    @code == guess ? @over = true : false
+  end
+
+  def out_of_turns?
+    @turns.zero?
   end
 
   private
@@ -102,4 +120,4 @@ end
 game = Game.new
 board = Board.new
 
-puts board
+game.take_turn(board)
