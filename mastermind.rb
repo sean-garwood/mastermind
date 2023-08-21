@@ -29,12 +29,18 @@ module Talk
 
   def provide_legend
     puts '---------Legend---------'
+    puts '---------Color pegs---------'
+    puts '----represent the color of the guess----'
     puts 'r: Red'
     puts 'o: Orange'
     puts 'y: Yellow'
     puts 'g: Green'
     puts 'b: Blue'
     puts 'v: Violet'
+    puts '---------Guess pegs---------'
+    puts 'x - incorrect color and position'
+    puts 'o - correct color, incorrect position'
+    puts 'c - correct color and position'
   end
 end
 
