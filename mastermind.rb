@@ -43,12 +43,15 @@ class Board
   BLANK_ROW = '_ _ _ _ | x x x x'
   INITIAL_BOARD_STATE = Array.new(12, BLANK_ROW)
 
+  attr_reader :board
+
   def initialize
     @board = INITIAL_BOARD_STATE
   end
 
   def to_s
-    "---------Board---------\n#{board}"
+    readable = @board.join("\n")
+    "---------Board---------\n#{readable}"
   end
 end
 
