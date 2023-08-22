@@ -88,8 +88,7 @@ class Game
   end
 
   def last_four(guess)
-    guess = guess[-4..] || guess
-    guess.reverse
+    guess[-4..] || guess
   end
 
   def give_feedback(guess)
@@ -100,7 +99,7 @@ class Game
       elsif char == @code[index]
         @feedback[index] = 'c'
       else
-        next
+        @feedback[index] = 'x'
       end
     end
     @feedback
@@ -113,7 +112,7 @@ class Game
       announce_turns
       # guess = last_four(gets.chomp.downcase)
       guess = 'royg' # debug
-      correct?(guess)
+      end_game unless guess != @code
       board.record_guess(guess, @turn, give_feedback(guess))
       @turn -= 1
       out_of_turns? ? @over = true : next
@@ -132,6 +131,11 @@ class Game
   private
 
   attr_reader :code
+
+  def end_game
+    puts "code: #{@code.join('')} / guess: #{@guess.join('')}"
+    exit
+  end
 end
 
 game = Game.new
