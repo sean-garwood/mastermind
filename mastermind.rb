@@ -57,7 +57,7 @@ class Board
   end
 
   def to_s
-    readable = @board.join("\n").reverse
+    readable = @board.join("\n")
     "---------Board---------\n#{readable}"
   end
 
