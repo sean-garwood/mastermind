@@ -47,7 +47,7 @@ end
 # represent the board
 class Board
   BLANK_ROW = '_ _ _ _ | x x x x'
-  INITIAL_BOARD_STATE = Array.new(12, BLANK_ROW)
+  INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
 
   attr_reader :board
 
