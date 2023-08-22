@@ -46,7 +46,10 @@ end
 
 # represent the board
 class Board
-  BLANK_ROW = '_ _ _ _ | x x x x'
+  NO_GUESS = '____'
+  NO_FEEDBACK = 'xxxx'
+  DELIMITER = ' | '
+  BLANK_ROW = NO_GUESS  + DELIMITER + NO_FEEDBACK
   INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
 
   attr_reader :board
@@ -56,7 +59,7 @@ class Board
   end
 
   def to_s
-    readable = @board.join("\n")
+    readable = @board.join("\n").reverse
     "---------Board---------\n#{readable}"
   end
 end
