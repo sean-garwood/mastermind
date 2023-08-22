@@ -35,4 +35,16 @@ module Talk
     puts 'o - correct color, incorrect position'
     puts 'c - correct color and position'
   end
+
+  def reminder
+    puts 'Enter your guess as a string of four letters. Order matters!'
+  end
+
+  def bad_end
+    puts '----Oh no!----'
+  end
+
+  def good_end
+    puts '----Yay!----'
+  end
 end

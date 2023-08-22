@@ -70,7 +70,7 @@ class Game
   def take_turns(board)
     until @over
       puts board
-      puts 'Enter your guess as a string of four letters. Order matters!'
+      reminder
       announce_turns
       guess = last_four(gets.chomp.downcase)
       end_game(guess) if guess.chars == @code
@@ -96,14 +96,6 @@ class Game
     puts "code: #{@code.join('')}\nguess: #{guess}"
     puts "Number of turns: #{turns}"
     exit
-  end
-
-  def bad_end
-    puts '----Oh no!----'
-  end
-
-  def good_end
-    puts '----Yay!----'
   end
 
   private
