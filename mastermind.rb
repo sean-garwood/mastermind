@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pry-byebug'
+
 # output to console
 module Talk
   def greet
@@ -53,8 +55,8 @@ class Board
     @board = INITIAL_BOARD_STATE
   end
 
-  def record_guess(guess, turn)
-    @board[turn] = guess + DELIMITER + NO_FEEDBACK
+  def record_guess(guess, turn, feedback)
+    @board[turn] = guess + DELIMITER + feedback
   end
 
   def to_s
@@ -70,8 +72,8 @@ end
 # instantiate a game
 class Game
   include Talk
-  COLORS = %w[r o y g b v].freeze
-  POSITIONS = (0..3).freeze
+  COLORS = %w[r o y g b v]
+  POSITIONS = Array.new(4)
 
   attr_reader :over, :player, :turns
 
@@ -92,24 +94,33 @@ class Game
   end
 
   def generate_code
-    code = {}
-    POSITIONS.each { |position| code[position] = COLORS.sample }
-    code
+    (0..3).map { |e| COLORS.sample }
   end
 
-  def guess_code(guess)
-    # guess will be a string of four letters--each representing a position and
-    # color in the position.
+  def give_feedback(guess)
+    feedback = 'xxxx'
+    iterable = guess.chars
+    iterable.each_with_index do |char, index|
+      case char
+      when code.include?(char) && char != code[index]
+        feedback[index].replace('o')
+      when char == code[index]
+        feedback[index].replace('c')
+      else
+        next
+      end
+    end
+    feedback
   end
 
-  def take_turn(board)
+  def take_turns(board)
     until @over
       puts board
       puts 'Enter your guess as a string of four letters. Order matters!'
       announce_turns
       guess = last_four(gets.chomp.downcase)
       correct?(guess)
-      board.record_guess(guess, @turn)
+      board.record_guess(guess, @turn, give_feedback(guess))
       @turn -= 1
       out_of_turns? ? @over = true : next
     end
@@ -131,4 +142,4 @@ end
 game = Game.new
 board = Board.new
 
-game.take_turn(board)
+game.take_turns(board)
