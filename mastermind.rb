@@ -35,6 +35,7 @@ class Code
 
   def initialize(code)
     @code = code.chars
+    @feedback = POSITIONS.map { 'x' }
   end
 
   def generate(code)
@@ -51,7 +52,6 @@ class Game < Code
   def initialize
     super
     greet
-    @feedback = POSITIONS.map { 'x' }
     @over = false
     @turn = 12
   end
