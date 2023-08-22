@@ -58,10 +58,19 @@ class Board
     @board = INITIAL_BOARD_STATE
   end
 
+  def record_guess(guess, turn)
+    @board[turn] = guess
+  end
+
   def to_s
     readable = @board.join("\n").reverse
     "---------Board---------\n#{readable}"
   end
+
+  private
+
+  attr_writer :board
+
 end
 
 # instantiate a game
@@ -77,11 +86,11 @@ class Game
     @code = generate_code
     @over = false
     @player = gets.chomp
-    @turns = 12
+    @turn = 12
   end
 
   def announce_turns
-    puts "There are #{@turns} turns remaining."
+    puts "There are #{@turn} turns remaining."
   end
 
   def generate_code
@@ -102,7 +111,8 @@ class Game
       announce_turns
       guess = gets.chomp.downcase
       correct?(guess)
-      @turns -= 1
+      board.record_guess(guess, @turn)
+      @turn -= 1
       out_of_turns? ? @over = true : next
     end
   end
@@ -112,7 +122,7 @@ class Game
   end
 
   def out_of_turns?
-    @turns.zero?
+    @turn.zero?
   end
 
   private
