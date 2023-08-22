@@ -28,18 +28,29 @@ class Board
   attr_writer :board
 end
 
-# instantiate a game
-class Game
-  include Talk
+# represents the secret code
+class Code
   COLORS = %w[r o y g b v].freeze
   POSITIONS = (0..3).freeze
 
+  def initialize(code)
+    @code = code.chars
+  end
+
+  def generate(code)
+    @code = code
+  end
+end
+
+# instantiate a game
+class Game < Code
+  include Talk
   attr_accessor :feedback
   attr_reader :over, :player, :turns
 
   def initialize
+    super
     greet
-    @code = POSITIONS.map { COLORS.sample }
     @feedback = POSITIONS.map { 'x' }
     @over = false
     @turn = 12
@@ -116,6 +127,7 @@ class Player
     @type = type
   end
 end
+
 
 game = Game.new
 board = Board.new
