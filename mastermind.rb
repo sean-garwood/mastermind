@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
+# require 'pry-byebug'
 
 # output to console
 module Talk
@@ -43,10 +43,7 @@ end
 
 # represent the board
 class Board
-  NO_GUESS = '____'
-  NO_FEEDBACK = 'xxxx'
-  DELIMITER = ' | '
-  BLANK_ROW = NO_GUESS + DELIMITER + NO_FEEDBACK
+  BLANK_ROW = '____ | xxxx'
   INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
 
   attr_reader :board
@@ -56,7 +53,7 @@ class Board
   end
 
   def record_guess(guess, turn, feedback)
-    @board[turn] = guess + DELIMITER + feedback
+    @board[turn] = guess + ' | ' + feedback.join('')
   end
 
   def to_s
@@ -73,13 +70,15 @@ end
 class Game
   include Talk
   COLORS = %w[r o y g b v]
-  POSITIONS = Array.new(4)
+  POSITIONS = (0..3)
 
+  attr_accessor :feedback
   attr_reader :over, :player, :turns
 
   def initialize
     greet
-    @code = generate_code
+    @code = POSITIONS.map { |e| COLORS.sample }
+    @feedback = POSITIONS.map { |e| 'x' }
     @over = false
     @turn = 12
   end
@@ -93,24 +92,18 @@ class Game
     guess.reverse
   end
 
-  def generate_code
-    (0..3).map { |e| COLORS.sample }
-  end
-
   def give_feedback(guess)
-    feedback = 'xxxx'
-    iterable = guess.chars
-    iterable.each_with_index do |char, index|
-      case char
-      when code.include?(char) && char != code[index]
-        feedback[index].replace('o')
-      when char == code[index]
-        feedback[index].replace('c')
+    guess = guess.chars
+    guess.each_with_index do |char, index|
+      if @code.include?(char) && char != @code[index]
+        @feedback[index] = 'o'
+      elsif char == @code[index]
+        @feedback[index] = 'c'
       else
         next
       end
     end
-    feedback
+    @feedback
   end
 
   def take_turns(board)
@@ -118,7 +111,8 @@ class Game
       puts board
       puts 'Enter your guess as a string of four letters. Order matters!'
       announce_turns
-      guess = last_four(gets.chomp.downcase)
+      # guess = last_four(gets.chomp.downcase)
+      guess = 'royg' # debug
       correct?(guess)
       board.record_guess(guess, @turn, give_feedback(guess))
       @turn -= 1
@@ -127,6 +121,7 @@ class Game
   end
 
   def correct?(guess)
+    guess = guess.chars
     @code == guess ? @over = true : false
   end
 
