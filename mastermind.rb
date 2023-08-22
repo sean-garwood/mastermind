@@ -107,6 +107,16 @@ class Game
   attr_reader :code
 end
 
+# instantiate players, assign attributes
+class Player
+  attr_reader :role, :type
+
+  def initialize(role, type)
+    @role = role
+    @type = type
+  end
+end
+
 game = Game.new
 board = Board.new
 
