@@ -76,7 +76,7 @@ class Game
       end_game(guess) if guess.chars == @code
       board.record_guess(guess, @turn, give_feedback(guess))
       @turn -= 1
-      out_of_turns? ? @over = true : next
+      out_of_turns? ? end_game(guess) : next
     end
   end
 
@@ -90,10 +90,20 @@ class Game
   end
 
   def end_game(guess)
-    turns = -1 * @turn - 12 - 1
-    puts "Congrats!\ncode: #{@code.join('')} / guess: #{guess}"
-    puts "Number of turns: #{@turn}"
+    @over = true
+    turns = (@turn - 12).abs
+    out_of_turns? ? bad_end : good_end
+    puts "code: #{@code.join('')}\nguess: #{guess}"
+    puts "Number of turns: #{turns}"
     exit
+  end
+
+  def bad_end
+    puts '----Oh no!----'
+  end
+
+  def good_end
+    puts '----Yay!----'
   end
 
   private
