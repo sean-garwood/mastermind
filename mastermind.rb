@@ -15,7 +15,7 @@ class Board
   end
 
   def record_guess(guess, turn, feedback)
-    @board[turn] = guess + ' | ' + feedback.join('')
+    @board[turn] = "#{guess} | #{feedback.join('')}"
   end
 
   def to_s
@@ -39,8 +39,8 @@ class Game
 
   def initialize
     greet
-    @code = POSITIONS.map { |e| COLORS.sample }
-    @feedback = POSITIONS.map { |e| 'x' }
+    @code = POSITIONS.map { COLORS.sample }
+    @feedback = POSITIONS.map { 'x' }
     @over = false
     @turn = 12
   end
