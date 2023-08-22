@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # require 'pry-byebug'
-require './talk'
+require_relative 'talk'
 
 # represent the board
 class Board
@@ -49,21 +49,25 @@ class Game
     puts "There are #{@turn} turns remaining."
   end
 
+  def check_code(guess)
+    guess.each_with_index do |char, index|
+    if @code.include?(char) && char != @code[index]
+      @feedback[index] = 'o'
+    elsif char == @code[index]
+      @feedback[index] = 'c'
+    else
+      @feedback[index] = 'x'
+    end
+    end
+  end
+
   def last_four(guess)
     guess[-4..] || guess
   end
 
   def give_feedback(guess)
     guess = guess.chars
-    guess.each_with_index do |char, index|
-      if @code.include?(char) && char != @code[index]
-        @feedback[index] = 'o'
-      elsif char == @code[index]
-        @feedback[index] = 'c'
-      else
-        @feedback[index] = 'x'
-      end
-    end
+    check_code(guess)
     @feedback
   end
 
