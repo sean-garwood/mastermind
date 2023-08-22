@@ -2,16 +2,11 @@
 
 # output to console
 module Talk
-  def prompt_for_username
-    puts 'Please enter your username.'
-  end
-
   def greet
     puts "---------Welcome to Mastermind!---------\n"
     describe_board
     describe_object
     provide_legend
-    prompt_for_username
   end
 
   def describe_board
@@ -49,7 +44,7 @@ class Board
   NO_GUESS = '____'
   NO_FEEDBACK = 'xxxx'
   DELIMITER = ' | '
-  BLANK_ROW = NO_GUESS  + DELIMITER + NO_FEEDBACK
+  BLANK_ROW = NO_GUESS + DELIMITER + NO_FEEDBACK
   INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
 
   attr_reader :board
@@ -59,7 +54,7 @@ class Board
   end
 
   def record_guess(guess, turn)
-    @board[turn] = guess
+    @board[turn] = guess + DELIMITER + NO_FEEDBACK
   end
 
   def to_s
@@ -70,7 +65,6 @@ class Board
   private
 
   attr_writer :board
-
 end
 
 # instantiate a game
@@ -85,12 +79,16 @@ class Game
     greet
     @code = generate_code
     @over = false
-    @player = gets.chomp
     @turn = 12
   end
 
   def announce_turns
     puts "There are #{@turn} turns remaining."
+  end
+
+  def last_four(guess)
+    guess = guess[-4..] || guess
+    guess.reverse
   end
 
   def generate_code
@@ -109,7 +107,7 @@ class Game
       puts board
       puts 'Enter your guess as a string of four letters. Order matters!'
       announce_turns
-      guess = gets.chomp.downcase
+      guess = last_four(gets.chomp.downcase)
       correct?(guess)
       board.record_guess(guess, @turn)
       @turn -= 1
