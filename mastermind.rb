@@ -69,8 +69,8 @@ end
 # instantiate a game
 class Game
   include Talk
-  COLORS = %w[r o y g b v]
-  POSITIONS = (0..3)
+  COLORS = %w[r o y g b v].freeze
+  POSITIONS = (0..3).freeze
 
   attr_accessor :feedback
   attr_reader :over, :player, :turns
@@ -110,9 +110,8 @@ class Game
       puts board
       puts 'Enter your guess as a string of four letters. Order matters!'
       announce_turns
-      # guess = last_four(gets.chomp.downcase)
-      guess = 'royg' # debug
-      end_game unless guess != @code
+      guess = last_four(gets.chomp.downcase)
+      end_game(guess) if guess.chars == @code
       board.record_guess(guess, @turn, give_feedback(guess))
       @turn -= 1
       out_of_turns? ? @over = true : next
@@ -128,14 +127,16 @@ class Game
     @turn.zero?
   end
 
+  def end_game(guess)
+    turns = -1 * @turn - 12 - 1
+    puts "Congrats!\ncode: #{@code.join('')} / guess: #{guess}"
+    puts "Number of turns: #{@turn}"
+    exit
+  end
+
   private
 
   attr_reader :code
-
-  def end_game
-    puts "code: #{@code.join('')} / guess: #{@guess.join('')}"
-    exit
-  end
 end
 
 game = Game.new
