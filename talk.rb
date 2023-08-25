@@ -21,19 +21,23 @@ module Talk
   end
 
   def provide_legend
-    puts '---------Legend---------'
-    puts '---------Color pegs---------'
-    puts '----represent the color of the guess----'
-    puts 'r: Red'
-    puts 'o: Orange'
-    puts 'y: Yellow'
-    puts 'g: Green'
-    puts 'b: Blue'
-    puts 'v: Violet'
-    puts '---------Guess pegs---------'
-    puts 'x - incorrect color and position'
-    puts 'o - correct color, incorrect position'
-    puts 'c - correct color and position'
+    legend = <<~LEGEND
+      ---------Legend---------
+      ---------Color pegs---------
+      ----represent the color of the guess----
+      r: Red
+      o: Orange
+      y: Yellow
+      g: Green
+      b: Blue
+      v: Violet
+      ---------Guess pegs---------
+      x - incorrect color and position
+      o - correct color, incorrect position
+      c - correct color and position
+    LEGEND
+
+    puts legend
   end
 
   def reminder
@@ -46,5 +50,13 @@ module Talk
 
   def good_end
     puts '----Yay!----'
+  end
+
+  def display_computer_results(guesses)
+    puts 'Computer guesses:'
+    guesses.each_with_index do |guess, i|
+      puts "#{i + 1}. #{guess}"
+    end
+    puts 'Computers always win.'
   end
 end
