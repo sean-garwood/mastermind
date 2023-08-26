@@ -66,6 +66,19 @@ class Game
     end
   end
 
+  def crack_code(board)
+    possible_colors = COLORS.each { |color| }
+    first_pair = COLORS.sample
+    second_pair = COLORS.sample
+    @guess = "#{first_pair}#{first_pair}#{second_pair}#{second_pair}"
+
+    until game_over?
+
+      #check guess > remove possibilities > modify guess
+
+    end
+  end
+
   private
 
   attr_reader :code
