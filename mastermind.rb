@@ -1,85 +1,35 @@
 # frozen_string_literal: true
 
-# require 'pry-byebug'
 require_relative 'talk'
 
-# represent the board
-class Board
-  BLANK_ROW = '____ | xxxx'
-  INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
+# check code, provide feedback
 
-  attr_reader :board
+# instantiate players, assign attributes
+class Player
+  attr_reader :role
 
-  def initialize
-    @board = INITIAL_BOARD_STATE
-  end
-
-  def record_guess(guess, turn, feedback)
-    @board[turn] = "#{guess} | #{feedback.join('')}"
-  end
-
-  def to_s
-    readable = @board.join("\n")
-    "---------Board---------\n#{readable}"
-  end
-
-  private
-
-  attr_writer :board
-end
-
-# represents the secret code
-class Code
-  COLORS = %w[r o y g b v].freeze
-  POSITIONS = (0..3).freeze
-
-  def initialize(code)
-    @code = code.chars
-    @feedback = POSITIONS.map { 'x' }
-  end
-
-  def generate(code)
-    @code = code
+  def initialize(role)
+    @role = role
   end
 end
 
 # instantiate a game
-class Game < Code
+class Game
+  COLORS = %w[r o y g b v].freeze
+  POSITIONS = (0..3).freeze
   include Talk
-  attr_accessor :feedback
-  attr_reader :over, :player, :turns
+  attr_reader :over, :turn
 
-  def initialize
-    super
+  def initialize(code)
+    super # @code = code?
     greet
+    @code = code.chars
     @over = false
     @turn = 12
   end
 
   def announce_turns
     puts "There are #{@turn} turns remaining."
-  end
-
-  def check_code(guess)
-    guess.each_with_index do |char, index|
-    if @code.include?(char) && char != @code[index]
-      @feedback[index] = 'o'
-    elsif char == @code[index]
-      @feedback[index] = 'c'
-    else
-      @feedback[index] = 'x'
-    end
-    end
-  end
-
-  def last_four(guess)
-    guess[-4..] || guess
-  end
-
-  def give_feedback(guess)
-    guess = guess.chars
-    check_code(guess)
-    @feedback
   end
 
   def take_turns(board)
@@ -96,8 +46,7 @@ class Game < Code
   end
 
   def correct?(guess)
-    guess = guess.chars
-    @code == guess ? @over = true : false
+    @code == guess.chars ? @over = true : false
   end
 
   def out_of_turns?
@@ -108,7 +57,7 @@ class Game < Code
     @over = true
     turns = (@turn - 12).abs
     out_of_turns? ? bad_end : good_end
-    puts "code: #{@code.join('')}\nguess: #{guess}"
+    puts "Code: #{@code.join('')}\nGuess: #{guess}"
     puts "Number of turns: #{turns}"
     exit
   end
@@ -118,16 +67,68 @@ class Game < Code
   attr_reader :code
 end
 
-# instantiate players, assign attributes
-class Player
-  attr_reader :role, :type
+# provide feedback on guesses to breaker
+class Feedback
+  WORST = %w[x x x x].freeze
+  attr_reader :feedback
 
-  def initialize(role, type)
-    @role = role
-    @type = type
+  def initialize(code)
+    @code = code
+    @feedback = WORST
   end
+
+  def last_four(guess)
+    guess[-4..] || guess
+  end
+
+  def give_feedback(guess)
+    guess = last_four(guess.chars)
+    check_code(guess)
+    @feedback
+  end
+
+  def check_code(guess)
+    guess.each_with_index do |char, index|
+    if @code.include?(char) && char != @code[index]
+      @feedback[index] = 'o'
+    elsif char == @code[index]
+      @feedback[index] = 'c'
+    else
+      @feedback[index] = 'x'
+    end
+    end
+  end
+
+  private
+
+  attr_writer :feedback
 end
 
+# represent the board
+class Board < Feedback
+  BLANK_ROW = '____ | xxxx'
+  INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
+
+  attr_reader :board
+
+  def initialize
+    super
+    @board = INITIAL_BOARD_STATE
+  end
+
+  def record_guess(guess, turn, feedback)
+    @board[turn - 1] = "[Turn #{turn}]: #{guess} | #{feedback.join('')}"
+  end
+
+  def to_s
+    readable = @board.join("\n")
+    "---------Board---------\n#{readable}"
+  end
+
+  private
+
+  attr_writer :board
+end
 
 game = Game.new
 board = Board.new
