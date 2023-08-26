@@ -15,17 +15,15 @@ end
 
 # represent the board
 class Board
-  BLANK_ROW = '____ | xxxx'
-  INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
   include CodeHelper
   attr_reader :board
 
   def initialize
-    @board = INITIAL_BOARD_STATE
+    @board = []
   end
 
-  def record_guess(turn, guess, feedback)
-    @board[turn - 1] = "[Turn #{turn}]: #{guess} | #{feedback.join('')}"
+  def record_guess(turn, guess, pegs)
+    @board << "[Turn #{turn}]: #{guess} | #{pegs}"
   end
 
   def to_s
@@ -42,23 +40,30 @@ end
 # if @breaker = nil then maker = true
 class Game
   COLORS = %w[r o y g b v].freeze
-  ALL_WRONG = %w[x x x x].freeze
   include CodeHelper
   include Talk
   attr_reader :over, :turn, :breaker, :pegs
 
   def initialize
     @over = false
-    @turn = 12
+    @turn = 1
     greet
     @breaker = take_input
     @breaker && @code = pick_random_colors || @code = take_input
     @guess = nil
-    @pegs = ALL_WRONG
+    @pegs = %w[x x x x]
   end
 
-  def announce_turns
-    puts "There are #{@turn} turns remaining."
+  def take_turns(board)
+    reminder
+    until game_over?
+      puts board
+      @guess = take_input
+      board.record_guess(@turn, @guess.join(''), give_pegs.join(''))
+      correct? ? end_game : nil
+      @turn += 1
+      out_of_turns? ? end_game : next
+    end
   end
 
   private
@@ -72,8 +77,13 @@ class Game
 
   def check_code
     @guess.each_with_index do |color, index|
-      color == @code[index] && @pegs[index] = 'c'
-      @code.include?(color) && @pegs[index] = 'o' || @pegs[index] = 'x'
+      if color == @code[index]
+        @pegs[index] = 'c'
+      elsif @code.include?(color)
+        @pegs[index] = 'o'
+      else
+        @pegs[index] = 'x'
+      end
     end
   end
 
@@ -82,25 +92,12 @@ class Game
     @pegs
   end
 
-  def take_turns(board)
-    reminder
-    until game_over?
-      announce_turns
-      puts board
-      guess = take_input
-      board.record_guess(@turn, guess.join(''), feedback.feedback.join(''))
-      correct? ? end_game : continue
-      @turn -= 1
-      out_of_turns? ? end_game : next
-    end
-  end
-
   def correct?
-    @code == guess.chars
+    @code == @guess
   end
 
   def out_of_turns?
-    @turn.zero?
+    @turn == 12
   end
 
   def game_over?
@@ -109,7 +106,6 @@ class Game
 
   def end_game
     @over = true
-    # if @breaker = true, display final board
     # if !@breaker, display computer results, final board
   end
 end
