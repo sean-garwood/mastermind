@@ -40,12 +40,7 @@ module Talk
     color_legend = <<~LEGEND
       ---------Legend---------
       ---------Color pegs---------
-      r: Red
-      o: Orange
-      y: Yellow
-      g: Green
-      b: Blue
-      v: Violet
+      r: Red, o: Orange, y: Yellow, g: Green, b: Blue, v: Violet
     LEGEND
     puts color_legend
   end
