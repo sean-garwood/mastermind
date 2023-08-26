@@ -2,29 +2,41 @@
 module Talk
   def greet
     puts "---------Welcome to Mastermind!---------\n"
+    choose_role
     describe_board
     describe_object
     provide_legend
   end
 
+  def choose_role
+    role = <<~ROLE
+      ---------Role---------
+      Choose your role. Will you be a codemaker or a heartbreaker?
+    ROLE
+    puts role
+  end
+
   def describe_board
-    puts 'The board is twelve rows by eight columns: four columns each for the'
-    puts 'previous guesses on the left, and four columns containing feedback'
-    puts 'for those guesses.'
+    description = <<~DESC
+      ----------The board----------
+      The board is twelve rows by eight columns: four columns each for the
+      previous guesses on the left, and four columns containing feedback
+      for those guesses.
+    DESC
+    puts description
   end
 
   def describe_object
-    puts '---------Object of game---------'
-    puts 'You have twelve turns to guess the correct code, which may contain'
-    puts 'duplicate values. You will be provided feedback at the end of each'
-    puts 'turn. See the legend for details'
+    ---------Object of game---------
+    You have twelve turns to guess the correct code, which may contain
+    duplicate values. You will be provided feedback at the end of each
+    turn. See the legend for details
   end
 
   def provide_legend
     legend = <<~LEGEND
       ---------Legend---------
       ---------Color pegs---------
-      ----represent the color of the guess----
       r: Red
       o: Orange
       y: Yellow
@@ -36,7 +48,6 @@ module Talk
       o - correct color, incorrect position
       c - correct color and position
     LEGEND
-
     puts legend
   end
 
