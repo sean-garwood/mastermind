@@ -23,7 +23,7 @@ class Game
   def initialize(code)
     super # @code = code?
     greet
-    @code = code.chars
+    @code = code
     @over = false
     @turn = 12
   end
@@ -51,15 +51,6 @@ class Game
 
   def out_of_turns?
     @turn.zero?
-  end
-
-  def end_game(guess)
-    @over = true
-    turns = (@turn - 12).abs
-    out_of_turns? ? bad_end : good_end
-    puts "Code: #{@code.join('')}\nGuess: #{guess}"
-    puts "Number of turns: #{turns}"
-    exit
   end
 
   private
