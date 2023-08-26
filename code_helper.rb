@@ -10,17 +10,27 @@ module CodeHelper
     last_four(gets.chomp.downcase.chars)
   end
 
-  def make_into_array(members, element)
+  def to_a(members, element)
     Array.new(members) { element }
   end
 
+  def set_code_and_guess
+    if maker?
+      @code = pick_random_colors
+      @guess = nil
+    else
+      @code = take_input
+      @guess = first_guess
+    end
+  end
+
   def first_guess
-    pair = Array.new(2) { COLORS.sample }
-    two_pair = Array.new(2) { pair }
+    pair = to_a(2, COLORS.sample)
+    two_pair = to_a(2, pair)
     two_pair.flatten.sort
   end
 
   def pick_random_colors
-    Array.new(4) { COLORS.sample }
+    to_a(4, COLORS.sample)
   end
 end
