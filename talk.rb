@@ -13,7 +13,7 @@ module Talk
       ---------Role---------\n
       Choose your role. Will you be a codemaker or a heartbreaker?\n
       (press Enter to be the breaker, anything else to watch the computer
-      wreck your code.)
+      wreck your code.)\n
     ROLE
     puts role
   end
@@ -23,7 +23,7 @@ module Talk
       ----------The board----------\n
       The board is twelve rows by eight columns: four columns each for the
       previous guesses on the left, and four columns containing feedback
-      for those guesses.
+      for those guesses.\n
     DESC
     puts description
   end
@@ -33,7 +33,7 @@ module Talk
       ---------Object of game---------\n
       You have twelve turns to guess the correct code, which may contain
       duplicate values. You will be provided feedback at the end of each
-      turn. See the legend for details
+      turn. See the legend for details.\n
     OBJ
     puts object_of_game
   end
