@@ -2,75 +2,30 @@
 
 require_relative 'talk'
 
-# instantiate a game. the user presses enter if they want to make the code, so
-# if @breaker = nil then maker = true
-class Game
-  COLORS = %w[r o y g b v].freeze
-  SLOTS = (0..3).freeze
-  include Talk
-  attr_reader :over, :turn, :breaker
-
-  def initialize
-    @over = false
-    @turn = 12
-    greet
-    @breaker = gets.chomp.to_b
-    @breaker && @code = pick_random_colors || @code = take_input
+# transform user input to translate code
+module CodeHelper
+  def last_four(guess)
+    guess[-4..] || guess
   end
 
-  def pick_random_colors
-    Array.new(4) { COLORS.sample }
+  def take_input
+    gets.chomp
   end
-
-  def announce_turns
-    puts "There are #{@turn} turns remaining."
-  end
-
-  def breaker?
-    @breaker
-  end
-
-  def take_turns(board)
-    reminder
-    until @over
-      puts board
-      announce_turns
-      guess = last_four(gets.chomp.downcase)
-      end_game(guess) if guess.chars == @code
-      board.record_guess(guess, @turn, give_feedback(guess))
-      @turn -= 1
-      out_of_turns? ? end_game(guess) : next
-    end
-  end
-
-  def correct?(guess)
-    @code == guess.chars ? @over = true : false
-  end
-
-  def out_of_turns?
-    @turn.zero?
-  end
-
-  private
-
-  attr_reader :code
 end
 
 # provide feedback on guesses to breaker
 class Feedback
   WORST = %w[x x x x].freeze
+  include CodeHelper
   attr_reader :feedback
 
   def initialize(code)
-    @code = code
+    @code = last_four(code)
     @feedback = WORST
   end
 
-  def last_four(guess)
-    guess[-4..] || guess
-  end
-
-  def check_code(guess)
+  def check_code
+    guess = last_four(take_input)
     guess.each_with_index do |char, index|
       char == @code[index] && @feedback[index] = 'c'
       @code.include?(char) && @feedback[index] = 'o' || @feedback[index] = 'x'
@@ -91,7 +46,7 @@ end
 class Board
   BLANK_ROW = '____ | xxxx'
   INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
-
+  include CodeHelper
   attr_reader :board
 
   def initialize
@@ -111,3 +66,64 @@ class Board
 
   attr_writer :board
 end
+
+# instantiate a game. the user presses enter if they want to make the code, so
+# if @breaker = nil then maker = true
+class Game
+  COLORS = %w[r o y g b v].freeze
+  include CodeHelper
+  include Talk
+  attr_reader :over, :turn, :breaker
+
+  def initialize
+    @over = false
+    @turn = 12
+    greet
+    @breaker = take_input
+    @breaker && @code = pick_random_colors || @code = take_input.chars
+  end
+
+  def pick_random_colors
+    Array.new(4) { COLORS.sample }
+  end
+
+  def announce_turns
+    puts "There are #{@turn} turns remaining."
+  end
+
+  def take_turns(board)
+    reminder
+    until game_over?
+      puts board
+      announce_turns
+      guess = last_four(take_input.downcase)
+      board.record_guess(guess, @turn, give_feedback(guess))
+      @turn -= 1
+      out_of_turns? ? end_game : next
+    end
+  end
+
+  def correct?
+    guess =
+    @code == guess.chars
+  end
+
+  def out_of_turns?
+    @turn.zero?
+  end
+
+  def game_over?
+    @over
+  end
+
+  private
+
+  attr_reader :code
+  attr_writer :over
+
+  def end_game
+    @over = true
+  end
+end
+
+game = Game.new
