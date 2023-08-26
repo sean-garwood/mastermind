@@ -4,12 +4,24 @@ require_relative 'talk'
 
 # transform user input to translate code
 module CodeHelper
+  COLORS = %w[r o y g b v].freeze
   def last_four(input)
     input[-4..] || input
   end
 
   def take_input
     last_four(gets.chomp.downcase.chars)
+  end
+
+  def first_guess
+    random_color = -> { COLORS.sample }
+    pair = Array.new(2) { random_color.call }
+    p pair
+    two_pair = Array.new(2) { pair }
+    p two_pair
+    two_pair.flatten.sort
+    p two_pair.flatten.sort
+    p two_pair.flatten.sort.join('')
   end
 end
 
@@ -27,8 +39,7 @@ class Board
   end
 
   def to_s
-    readable = @board.join("\n")
-    "---------Board---------\n#{readable}"
+    "---------Board---------\n#{@board.join("\n")}"
   end
 
   private
@@ -39,7 +50,6 @@ end
 # instantiate a game. the user presses enter if they want to make the code, so
 # if @breaker = nil then maker = true
 class Game
-  COLORS = %w[r o y g b v].freeze
   include CodeHelper
   include Talk
   attr_reader :over, :turn, :breaker, :pegs
@@ -49,11 +59,17 @@ class Game
     @turn = 1
     greet
     @breaker = take_input
-    @breaker && @code = pick_random_colors || @code = take_input
-    @guess = nil
+    if @breaker
+      @code = pick_random_colors
+      @guess = nil
+    else
+      @code = take_input
+      @guess = first_guess
+    end
     @pegs = %w[x x x x]
   end
 
+  # how a human plays the game
   def take_turns(board)
     reminder
     until game_over?
@@ -63,19 +79,6 @@ class Game
       correct? ? end_game : nil
       @turn += 1
       out_of_turns? ? end_game : next
-    end
-  end
-
-  def crack_code(board)
-    possible_colors = COLORS.each { |color| }
-    first_pair = COLORS.sample
-    second_pair = COLORS.sample
-    @guess = "#{first_pair}#{first_pair}#{second_pair}#{second_pair}"
-
-    until game_over?
-
-      #check guess > remove possibilities > modify guess
-
     end
   end
 
@@ -105,6 +108,10 @@ class Game
     @pegs
   end
 
+  def in_code?(color)
+    @code.contains?(color)
+  end
+
   def correct?
     @code == @guess
   end
@@ -126,4 +133,5 @@ end
 board = Board.new
 game = Game.new
 
-game.breaker ? game.take_turns(board) : display_computer_results
+p game.first_guess
+# game.breaker ? game.take_turns(board) : display_computer_results
