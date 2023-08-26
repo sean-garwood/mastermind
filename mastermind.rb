@@ -2,40 +2,32 @@
 
 require_relative 'talk'
 
-# check code, provide feedback
-
-# instantiate players, assign attributes
-class Player
-  attr_reader :role
-
-  def initialize(role)
-    @role = role
-  end
-end
-
-# instantiate a game
+# instantiate a game. the user presses enter if they want to make the code, so
+# if @maker = nil then maker = true
 class Game
-  COLORS = %w[r o y g b v].freeze
-  POSITIONS = (0..3).freeze
   include Talk
-  attr_reader :over, :turn
+  attr_reader :over, :turn, :maker
 
-  def initialize(code)
-    super # @code = code?
+  def initialize(maker, code)
     greet
-    @code = code
     @over = false
     @turn = 12
+    @maker = gets.chomp
+    @code = code
   end
 
   def announce_turns
     puts "There are #{@turn} turns remaining."
   end
 
+  def maker?
+    true unless @maker
+  end
+
   def take_turns(board)
+    reminder
     until @over
       puts board
-      reminder
       announce_turns
       guess = last_four(gets.chomp.downcase)
       end_game(guess) if guess.chars == @code
@@ -120,8 +112,3 @@ class Board < Feedback
 
   attr_writer :board
 end
-
-game = Game.new
-board = Board.new
-
-game.take_turns(board)
