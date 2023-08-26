@@ -5,14 +5,21 @@ require_relative 'talk'
 # instantiate a game. the user presses enter if they want to make the code, so
 # if @breaker = nil then maker = true
 class Game
+  COLORS = %w[r o y g b v].freeze
+  SLOTS = (0..3).freeze
   include Talk
   attr_reader :over, :turn, :breaker
 
-  def initialize(code)
-    greet
+  def initialize
     @over = false
     @turn = 12
+    greet
     @breaker = gets.chomp.to_b
+    @breaker && @code = pick_random_colors || @code = take_input
+  end
+
+  def pick_random_colors
+    Array.new(4) { COLORS.sample }
   end
 
   def announce_turns
