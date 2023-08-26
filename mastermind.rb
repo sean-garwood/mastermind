@@ -64,22 +64,17 @@ class Feedback
     guess[-4..] || guess
   end
 
-  def give_feedback(guess)
-    guess = last_four(guess.chars)
-    check_code(guess)
-    @feedback
-  end
-
   def check_code(guess)
     guess.each_with_index do |char, index|
-    if @code.include?(char) && char != @code[index]
-      @feedback[index] = 'o'
-    elsif char == @code[index]
-      @feedback[index] = 'c'
-    else
-      @feedback[index] = 'x'
+      peg = @feedback[index]
+      char == @code[index] && peg = 'c'
+      @code.include?(char) && peg = 'o' || peg = 'x'
     end
-    end
+  end
+
+  def give_feedback(guess)
+    check_code(guess)
+    @feedback
   end
 
   private
@@ -88,14 +83,13 @@ class Feedback
 end
 
 # represent the board
-class Board < Feedback
+class Board
   BLANK_ROW = '____ | xxxx'
   INITIAL_BOARD_STATE = Array.new(12) { String.new(BLANK_ROW) }
 
   attr_reader :board
 
   def initialize
-    super
     @board = INITIAL_BOARD_STATE
   end
 
