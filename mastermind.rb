@@ -58,7 +58,7 @@ class Game
     @over = false
     @turn = 1
     greet
-    @breaker = take_input
+    @breaker = !take_input
     if @breaker
       @code = pick_random_colors
       @guess = nil
