@@ -2,10 +2,10 @@
 module Talk
   def greet
     puts "---------Welcome to Mastermind!---------\n"
-    choose_role
     describe_board
     describe_object_of_game
     provide_legend
+    choose_role
   end
 
   def choose_role
