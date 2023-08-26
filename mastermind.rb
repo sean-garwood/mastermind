@@ -3,25 +3,24 @@
 require_relative 'talk'
 
 # instantiate a game. the user presses enter if they want to make the code, so
-# if @maker = nil then maker = true
+# if @breaker = nil then maker = true
 class Game
   include Talk
-  attr_reader :over, :turn, :maker
+  attr_reader :over, :turn, :breaker
 
-  def initialize(maker, code)
+  def initialize(code)
     greet
     @over = false
     @turn = 12
-    @maker = gets.chomp
-    @code = code
+    @breaker = gets.chomp.to_b
   end
 
   def announce_turns
     puts "There are #{@turn} turns remaining."
   end
 
-  def maker?
-    true unless @maker
+  def breaker?
+    @breaker
   end
 
   def take_turns(board)
@@ -66,9 +65,8 @@ class Feedback
 
   def check_code(guess)
     guess.each_with_index do |char, index|
-      peg = @feedback[index]
-      char == @code[index] && peg = 'c'
-      @code.include?(char) && peg = 'o' || peg = 'x'
+      char == @code[index] && @feedback[index] = 'c'
+      @code.include?(char) && @feedback[index] = 'o' || @feedback[index] = 'x'
     end
   end
 
