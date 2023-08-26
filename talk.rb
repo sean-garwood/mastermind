@@ -4,7 +4,7 @@ module Talk
     puts "---------Welcome to Mastermind!---------\n"
     choose_role
     describe_board
-    describe_object
+    describe_object_of_game
     provide_legend
   end
 
@@ -26,15 +26,18 @@ module Talk
     puts description
   end
 
-  def describe_object
-    ---------Object of game---------
-    You have twelve turns to guess the correct code, which may contain
-    duplicate values. You will be provided feedback at the end of each
-    turn. See the legend for details
+  def describe_object_of_game
+    object_of_game = <<~OBJ
+      ---------Object of game---------
+      You have twelve turns to guess the correct code, which may contain
+      duplicate values. You will be provided feedback at the end of each
+      turn. See the legend for details
+    OBJ
+    puts object_of_game
   end
 
-  def provide_legend
-    legend = <<~LEGEND
+  def color_legend
+    color_legend = <<~LEGEND
       ---------Legend---------
       ---------Color pegs---------
       r: Red
@@ -43,12 +46,18 @@ module Talk
       g: Green
       b: Blue
       v: Violet
+    LEGEND
+    puts color_legend
+  end
+
+  def guess_legend
+    guess_legend = <<~LEGEND
       ---------Guess pegs---------
       x - incorrect color and position
       o - correct color, incorrect position
       c - correct color and position
     LEGEND
-    puts legend
+    puts guess_legend
   end
 
   def reminder
