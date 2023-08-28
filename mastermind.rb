@@ -20,16 +20,6 @@ class Game
     set_code_and_guess
   end
 
-  def set_code_and_guess
-    if maker?
-      @code = pick_random_colors
-      @guess = nil
-    else
-      @code = take_input
-      @guess = first_guess
-    end
-  end
-
   # how a human plays the game
   def take_turns(board)
     reminder
@@ -51,31 +41,6 @@ class Game
 
   attr_reader :code
   attr_writer :over, :pegs
-
-  def check_code
-    @guess.each_with_index do |color, index|
-      if color == @code[index]
-        @pegs[index] = 'c'
-      elsif @code.include?(color)
-        @pegs[index] = 'o'
-      else
-        @pegs[index] = 'x'
-      end
-    end
-  end
-
-  def give_pegs
-    check_code
-    @pegs
-  end
-
-  def in_code?(color)
-    @code.contains?(color)
-  end
-
-  def correct?
-    @code == @guess
-  end
 
   def out_of_turns?
     @turn == 12
