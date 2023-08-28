@@ -16,8 +16,6 @@ class Game
     @turn = 1
     greet
     @maker = take_input
-    @pegs = %w[x x x x]
-    set_code_and_guess
   end
 
   # how a human plays the game
@@ -39,8 +37,7 @@ class Game
 
   private
 
-  attr_reader :code
-  attr_writer :over, :pegs
+  attr_writer :over
 
   def out_of_turns?
     @turn == 12

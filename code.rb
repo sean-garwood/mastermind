@@ -1,24 +1,14 @@
-# store information about the code:
-# the code itself
-# current_guess
-# possibilities
-# feedback 'pegs'
+# frozen_string_literal: true
 
-# These were a bunch of methods that were in the mastermind.rb Game class, but
-# it was getting quite cluttered. i thought it better design to store
-# information relating to the game state in that class, and keep only procedural
-# methods relating to gameplay in there.
-
-# I intend to include methods and variables for dealing with the code and
-# feedback. The goal is for this program to be indifferent to the role of the
-# human player.
+# Code and feedback
 class Code
   include CodeHelper
   attr_reader :guess, :pegs
 
   def initialize
+    @maker = take_input
     @code = generate_code
-    @guess = maker? ? take_input : pick_random_colors
+    @guess = generate_first_guess
     @pegs = to_a(4, PEGS[:wrong])
   end
 
@@ -26,19 +16,12 @@ class Code
     maker? ? take_input : pick_random_colors
   end
 
-  def set_code_and_guess
-    if maker?
-      @code = pick_random_colors
-      @guess = nil
-    else
-      @code = take_input
-      @guess = first_guess
-    end
+  def generate_first_guess
+    maker? ? first_guess : take_input
   end
 
   def check_guess
-    return if !correct?
-    end
+    return if correct?
 
     @guess.each_with_index do |color, index|
       @pegs[index] =
@@ -55,6 +38,10 @@ class Code
   def give_pegs
     check_code
     @pegs
+  end
+
+  def maker?
+    @maker
   end
 
   private
