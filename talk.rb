@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # output to console
 module Talk
   def greet
@@ -81,5 +83,4 @@ module Talk
     end
     puts 'Computers always win.'
   end
-
 end
