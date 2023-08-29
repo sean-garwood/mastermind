@@ -42,8 +42,13 @@ class Code
   attr_reader :code
   attr_writer :pegs
 
+  def prompt_for_code
+    prompt_user_for_code
+    take_input
+  end
+
   def generate_code
-    breaker? ? take_input : pick_random_colors
+    breaker? ? pick_random_colors : prompt_for_code
   end
 
   def first_guess
