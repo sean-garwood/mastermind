@@ -1,47 +1,40 @@
 # frozen_string_literal: true
 
+require 'pry-byebug'
+require_relative 'code_helper'
+
 # Code and feedback
 class Code
+  PEGS = { correct: 'c', okay: 'o', wrong: 'x' }.freeze
   include CodeHelper
-  attr_reader :guess, :pegs
+  attr_reader :maker, :guess, :pegs
 
   def initialize
+    greet
     @maker = take_input
     @code = generate_code
     @guess = generate_first_guess
-    @pegs = to_a(4, PEGS[:wrong])
+    @pegs = []
   end
 
-  def generate_code
-    maker? ? take_input : pick_random_colors
-  end
-
-  def generate_first_guess
-    maker? ? first_guess : take_input
-  end
-
-  def check_guess
-    return if correct?
-
-    @guess.each_with_index do |color, index|
-      @pegs[index] =
-        if color == @code[index]
-          PEGS[:correct]
-        elsif @code.include?(color)
-          PEGS[:okay]
-        else
-          PEGS[:wrong]
-        end
+  def check_color(color)
+    if color == @code[index]
+      PEGS[:correct]
+    elsif @code.include?(color)
+      PEGS[:okay]
+    else
+      PEGS[:wrong]
     end
   end
 
-  def give_pegs
-    check_code
-    @pegs
+  def check_guess
+    @guess.each_with_index do |color, index|
+      @pegs[index] = check_color(color, index)
+    end
   end
 
-  def maker?
-    @maker
+  def breaker?
+    @maker.empty?
   end
 
   private
@@ -49,8 +42,22 @@ class Code
   attr_reader :code
   attr_writer :pegs
 
-  def in_code?(color)
-    @code.contains?(color)
+  def generate_code
+    breaker? ? take_input : pick_random_colors
+  end
+
+  def first_guess
+    first_color = random_color
+    color_pool = COLORS.reject { |color| color == first_color }
+    second_color = color_pool.sample
+    first_guess = []
+    2.times { first_guess << first_color }
+    2.times { first_guess << second_color }
+    first_guess
+  end
+
+  def generate_first_guess
+    breaker? ? first_guess : pick_random_colors
   end
 
   def correct?
