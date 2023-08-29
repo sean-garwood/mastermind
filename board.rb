@@ -8,8 +8,12 @@ class Board
     @board = []
   end
 
+  def readable(arr)
+    arr.join('')
+  end
+
   def record_guess(turn, guess, pegs)
-    @board << "[Turn #{turn}]: #{guess} | #{pegs}"
+    @board << "[Turn #{turn}]: #{readable(guess)} | #{readable(pegs)}"
   end
 
   def to_s
