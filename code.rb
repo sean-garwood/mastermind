@@ -17,7 +17,7 @@ class Code
     @pegs = []
   end
 
-  def check_color(color)
+  def check_color(color, index)
     if color == @code[index]
       PEGS[:correct]
     elsif @code.include?(color)
@@ -39,12 +39,17 @@ class Code
 
   private
 
-  attr_reader :code
+  attr_accessor :code
   attr_writer :pegs
 
   def prompt_for_code
     prompt_user_for_code
-    take_input
+    @code = take_input
+  end
+
+  def prompt_for_guess
+    prompt_user_for_guess
+    @guess = take_input
   end
 
   def generate_code
