@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'code_helper'
-
 # represent the board
 class Board
   attr_reader :board

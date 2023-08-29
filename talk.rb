@@ -44,7 +44,7 @@ module Talk
     color_legend = <<~LEGEND
       ---------Legend---------\n
       ---------Color pegs---------\n
-      r: Red, o: Orange, y: Yellow, g: Green, b: Blue, v: Violet
+      r: Red, o: Orange, y: Yellow, g: Green, b: Blue, v: Violet\n
     LEGEND
     puts color_legend
   end
@@ -54,7 +54,7 @@ module Talk
       ---------Guess pegs---------\n
       x - incorrect color and position
       o - correct color, incorrect position
-      c - correct color and position
+      c - correct color and position\n
     LEGEND
     puts guess_legend
   end
