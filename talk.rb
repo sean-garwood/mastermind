@@ -68,7 +68,7 @@ module Talk
     puts 'Enter the secret code of colors. Order matters!'
   end
 
-  def reminder
+  def prompt_user_for_guess
     puts 'Enter your guess as a string of four letters. Order matters!'
   end
 
