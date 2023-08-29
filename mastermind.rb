@@ -18,6 +18,15 @@ class Game < Code
     @turn = 1
   end
 
+  def play(board)
+    case breaker?
+    when true
+      human_game(board)
+    else
+      computer_game(board)
+    end
+  end
+
   private
 
   attr_writer :over, :turn
@@ -33,9 +42,20 @@ class Game < Code
   def end_game
     @over = true
   end
+
+  def human_game(board)
+    until game_over?
+      puts board
+      prompt_for_guess
+      check_guess
+      board.record_guess(@turn, @guess, @pegs)
+      correct? ? end_game : nil
+      @turn += 1
+      out_of_turns? ? end_game : nil
+    end
+  end
 end
 
+board = Board.new
 game = Game.new
-
-puts game.guess.join('')
-puts game.pegs.join('')
+game.play(board)
