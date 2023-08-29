@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
+require_relative 'code_helper'
+
 # represent the board
 class Board
-  include CodeHelper
   attr_reader :board
 
   def initialize
