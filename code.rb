@@ -18,6 +18,7 @@ class Code
     @guess = generate_first_guess
     binding.pry
     @pegs = []
+    @pool = COLORS
   end
 
   def check_color(color, index)
@@ -42,7 +43,7 @@ class Code
 
   private
 
-  attr_accessor :code
+  attr_accessor :code, :pool
   attr_writer :pegs
 
   def prompt_for_code
@@ -73,6 +74,19 @@ class Code
     breaker? ? prompt_for_guess : first_guess
   end
 
+  def drain_pool
+  @pool = @guess.each_with_index do |color, index|
+      color_pool.reject { |color| @pegs[index] == PEGS[:wrong] }
+
+  def hack_code
+    check_guess
+    correct? ? end_game : nil
+    @turn += 1
+    out_of_turns? ? end_game : nil
+
+
+
+  end
   def correct?
     @code == @guess
   end
