@@ -1,24 +1,21 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
+# require 'pry-byebug'
 require_relative 'code_helper'
 
 # Code and feedback
 class Code
-  PEGS = { correct: 'c', okay: 'o', wrong: 'x' }.freeze
+  PEGS = { correct: 'c', okay: 'o', wrong: 'x' }
   include CodeHelper
   attr_reader :maker, :guess, :pegs
 
   def initialize
     greet
     @maker = take_input
-    binding.pry
     @code = generate_code
-    binding.pry
     @guess = generate_first_guess
-    binding.pry
     @pegs = []
-    @pool = COLORS
+    @pool = COLORS.map { |color| color }
   end
 
   def check_color(color, index)
@@ -43,7 +40,7 @@ class Code
 
   private
 
-  attr_accessor :code, :pool
+  attr_accessor :code
   attr_writer :pegs
 
   def prompt_for_code
@@ -71,22 +68,30 @@ class Code
   end
 
   def generate_first_guess
-    breaker? ? prompt_for_guess : first_guess
+    breaker? ? nil : first_guess
   end
 
   def drain_pool
-  @pool = @guess.each_with_index do |color, index|
-      color_pool.reject { |color| @pegs[index] == PEGS[:wrong] }
+    # check to see if any x in pegs and remove corresponding colors
+    bad_guesses = @guess.each_with_index.reduce([]) do |excluded, (color, i)|
+      @pegs[i] == 'x' ? excluded << color : next
+    end
+    @pool.select! { |color| bad_guesses.include?(color) } unless bad_guesses.nil?
+  end
+
+  def next_guess
+    @guess.each_index do |i|
+      @guess[i] = @pool.select unless @pegs[i] == PEGS[:correct]
+    end
+  end
 
   def hack_code
+    guesses = [] << @guess
     check_guess
-    correct? ? end_game : nil
-    @turn += 1
-    out_of_turns? ? end_game : nil
-
-
-
+    drain_pool
+    next_guess
   end
+
   def correct?
     @code == @guess
   end
