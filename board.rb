@@ -9,7 +9,7 @@ class Board
   end
 
   def readable(arr)
-    arr.join('')
+    arr == @board ? arr.join("\n") : arr.join('')
   end
 
   def record_guess(turn, guess, pegs)
@@ -17,7 +17,12 @@ class Board
   end
 
   def to_s
-    "---------Board---------\n#{@board.join("\n")}"
+    <<~BOARD
+      \n---------Board---------\n\n
+      [turn #]  guess|feedback
+      -------------------------
+      #{readable(@board)}
+    BOARD
   end
 
   private
