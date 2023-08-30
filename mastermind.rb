@@ -19,11 +19,13 @@ class Game < Code
   end
 
   def play(board)
-    case breaker?
-    when true
-      human_game(board)
-    else
-      computer_game
+    until game_over?
+      case breaker?
+      when true
+        human_game(board)
+      else
+        computer_game(board)
+      end
     end
   end
 
@@ -44,20 +46,22 @@ class Game < Code
   end
 
   def human_game(board)
-    until game_over?
-      puts board unless @turn == 1
-      prompt_for_guess
-      check_guess
-      board.record_guess(@turn, @guess, @pegs)
-      correct? ? end_game : nil
-      @turn += 1
-      out_of_turns? ? end_game : nil
-    end
+    puts board
+    prompt_for_guess
+    check_guess
+    board.record_guess(@turn, @guess, @pegs)
+    correct? ? end_game : nil
+    @turn += 1
+    out_of_turns? ? end_game : nil
   end
 
-  def computer_game
-    # player enters code
+  def computer_game(board)
     # guessing algo
+    hack_code
+    board.record_guess(@turn, @guess, @pegs)
+    correct? ? end_game : nil
+    @turn += 1
+    out_of_turns? ? end_game : nil
     # display results
   end
 end
@@ -65,3 +69,4 @@ end
 board = Board.new
 game = Game.new
 game.play(board)
+puts board
