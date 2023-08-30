@@ -65,11 +65,11 @@ module Talk
   end
 
   def prompt_user_for_code
-    puts 'Enter the secret code of colors. Order matters!'
+    puts "\nEnter the secret code of colors. Order matters!\n\n"
   end
 
   def prompt_user_for_guess
-    puts 'Enter your guess as a string of four letters. Order matters!'
+    puts "\nEnter your guess as a string of four letters. Order matters!\n\n"
   end
 
   def bad_end
