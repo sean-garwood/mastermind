@@ -23,7 +23,7 @@ class Game < Code
     when true
       human_game(board)
     else
-      computer_game(board)
+      computer_game
     end
   end
 
@@ -45,7 +45,7 @@ class Game < Code
 
   def human_game(board)
     until game_over?
-      puts board
+      puts board unless @turn == 1
       prompt_for_guess
       check_guess
       board.record_guess(@turn, @guess, @pegs)
@@ -53,6 +53,12 @@ class Game < Code
       @turn += 1
       out_of_turns? ? end_game : nil
     end
+  end
+
+  def computer_game
+    # player enters code
+    # guessing algo
+    # display results
   end
 end
 
