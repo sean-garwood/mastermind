@@ -12,8 +12,11 @@ class Code
   def initialize
     greet
     @maker = take_input
+    binding.pry
     @code = generate_code
+    binding.pry
     @guess = generate_first_guess
+    binding.pry
     @pegs = []
   end
 
@@ -67,7 +70,7 @@ class Code
   end
 
   def generate_first_guess
-    breaker? ? first_guess : pick_random_colors
+    breaker? ? prompt_for_guess : first_guess
   end
 
   def correct?
