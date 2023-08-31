@@ -14,9 +14,6 @@ the human player must guess them. Remember that you need to give the proper
 feedback on how good the guess was each turn!
 - Now refactor your code to allow the human player to choose whether they want
 to be the creator of the secret code or the guesser.
-
-### todo
-
 - Build it out so that the computer will guess if you decide to choose your own
 secret colors. You may choose to implement a computer strategy that follows the
 rules of the game or you can modify these rules.
