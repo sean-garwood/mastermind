@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# require 'pry-byebug'
 require_relative 'code_helper'
 
 # Code and feedback
@@ -12,7 +11,7 @@ class Code
   def initialize
     greet
     @maker = take_input
-    @code = generate_code
+    @code = pick_random_colors # debug
     @guess = generate_first_guess
     @pegs = []
     @pool = COLORS.map { |color| color }
@@ -40,12 +39,13 @@ class Code
 
   private
 
-  attr_accessor :code
+  attr_accessor :code, :pool
   attr_writer :pegs
 
   def prompt_for_code
     prompt_user_for_code
     @code = take_input
+    @code = pick_random_colors
   end
 
   def prompt_for_guess
@@ -73,20 +73,28 @@ class Code
 
   def drain_pool
     # check to see if any x in pegs and remove corresponding colors
-    bad_guesses = @guess.each_with_index.reduce([]) do |excluded, (color, i)|
-      @pegs[i] == 'x' ? excluded << color : next
+    @pegs.each_with_index do |peg, idx|
+      peg == 'x' && @pool.delete(@guess[idx])
     end
-    @pool.select! { |color| bad_guesses.include?(color) } unless bad_guesses.nil?
+  end
+
+  def drain_pool_gpt
+    # check to see if any x in pegs and remove corresponding colors
+    bad_guesses = @guess.each_with_index.reduce([]) do |excluded, (color, i)|
+      if @pegs[i] == 'x'
+        excluded << color
+      end
+    end
+    @pool.reject! { |color| bad_guesses.include?(color) } unless bad_guesses.nil?
   end
 
   def next_guess
     @guess.each_index do |i|
-      @guess[i] = @pool.select unless @pegs[i] == PEGS[:correct]
+      @guess[i] = @pool.sample unless @pegs[i] == 'c'
     end
   end
 
   def hack_code
-    guesses = [] << @guess
     check_guess
     drain_pool
     next_guess
