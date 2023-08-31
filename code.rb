@@ -4,14 +4,13 @@ require_relative 'code_helper'
 
 # Code and feedback
 class Code
-  PEGS = { correct: 'c', okay: 'o', wrong: 'x' }
   include CodeHelper
   attr_reader :maker, :guess, :pegs
 
   def initialize
     greet
     @maker = take_input
-    @code = pick_random_colors # debug
+    @code = generate_code
     @guess = generate_first_guess
     @pegs = []
     @pool = COLORS.map { |color| color }
@@ -19,11 +18,11 @@ class Code
 
   def check_color(color, index)
     if color == @code[index]
-      PEGS[:correct]
+      'c'
     elsif @code.include?(color)
-      PEGS[:okay]
+      'o'
     else
-      PEGS[:wrong]
+      'x'
     end
   end
 
@@ -45,7 +44,6 @@ class Code
   def prompt_for_code
     prompt_user_for_code
     @code = take_input
-    @code = pick_random_colors
   end
 
   def prompt_for_guess
@@ -72,32 +70,15 @@ class Code
   end
 
   def drain_pool
-    # check to see if any x in pegs and remove corresponding colors
     @pegs.each_with_index do |peg, idx|
       peg == 'x' && @pool.delete(@guess[idx])
     end
-  end
-
-  def drain_pool_gpt
-    # check to see if any x in pegs and remove corresponding colors
-    bad_guesses = @guess.each_with_index.reduce([]) do |excluded, (color, i)|
-      if @pegs[i] == 'x'
-        excluded << color
-      end
-    end
-    @pool.reject! { |color| bad_guesses.include?(color) } unless bad_guesses.nil?
   end
 
   def next_guess
     @guess.each_index do |i|
       @guess[i] = @pool.sample unless @pegs[i] == 'c'
     end
-  end
-
-  def hack_code
-    check_guess
-    drain_pool
-    next_guess
   end
 
   def correct?

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
+require 'pry-byebug'
 require_relative 'board'
 require_relative 'code'
 require_relative 'code_helper'
 require_relative 'talk'
 
-# instantiate a game. the user presses enter if they want to make the code, so
-# if @maker = nil then maker = true
+# instantiate a game. the user presses enter if they want to make the code
 class Game < Code
   include CodeHelper
   include Talk
@@ -56,17 +56,19 @@ class Game < Code
   end
 
   def computer_game(board)
-    # guessing algo
-    hack_code
+    check_guess
     board.record_guess(@turn, @guess, @pegs)
+    drain_pool
+    next_guess
     correct? ? end_game : nil
     @turn += 1
     out_of_turns? ? end_game : nil
-    # display results
   end
 end
 
 board = Board.new
 game = Game.new
 game.play(board)
+puts "done\nguess: #{game.guess}\nturns: #{game.turn}"
+puts '---------final board--------------'
 puts board
